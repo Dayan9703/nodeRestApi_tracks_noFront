@@ -36,3 +36,21 @@ const UserScheme = mongoose.Schema(
 );
 
 module.exports = mongoose.model('users', UserScheme)
+
+/*Usuario de prueba
+{
+    "name":"Leifer",
+    "album":"Album",
+    "cover":"http://sss.com",
+    "artist":{
+        "name":"Leifer",
+        "nickname":"leiferfernandez",
+        "nationality":"VE"
+    },
+    "duration":{
+        "start":1,
+        "end":0
+    },
+    "mediaId":"asdasdasdasd"
+}
+*/
