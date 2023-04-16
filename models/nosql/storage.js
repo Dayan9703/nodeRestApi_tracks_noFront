@@ -5,9 +5,7 @@ const StorageScheme = mongoose.Schema(
     {
         url: {
             type: String
-        }
-    },
-    {
+        },
         filename: {
             type: String
         }
@@ -19,4 +17,4 @@ const StorageScheme = mongoose.Schema(
 );
 
 StorageScheme.plugin(mongooseDelete, {overrideMethods: 'all'})
-module.exports = mongoose.model('storages', StorageScheme)
+module.exports = mongoose.model('storage', StorageScheme)

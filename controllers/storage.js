@@ -1,31 +1,66 @@
-const { storageModel } = require("../models");
-const PUBLIC_URL = process.env.PUBLIC_URL;
+const fs = require('fs')
+const { matchedData } = require("express-validator");
+const { storageModel } = require("../models")
+const { handleHttpError } = require('../utils/handleError')
+
+const PUBLIC_URL = process.env.PUBLIC_URL
+const MEDIA_PATH = `${__dirname}/../storage`
 
 const getItems = async (req, res) => {
-    const data = await storageModel.find({})
-    res.send({ data });
+    try {
+        const data = await storageModel.find({})
+        res.send({ data });
+    } catch (e) {
+        handleHttpError(res, 'ERROR_LIST_ITEMS')
+    }
 };
-const getItem = (req, res) => {
-
+const getItem = async (req, res) => {
+    try {
+        const { id } = matchedData(req)
+        const data = await storageModel.findById(id)
+        res.send({ data });
+    } catch (e) {
+        handleHttpError(res, 'ERROR_DETAIL_ITEMS')
+    }
 };
 const createItem = async (req, res) => {
-    const { body, file } = req
-    console.log(file)
-    const fileData = {
-        filename: file.filename,
-        url:`${PUBLIC_URL}/${file.filename}`
+    try {
+        const { file } = req
+        const fileData = {
+            url: `${PUBLIC_URL}/${file.filename}`,
+            filename: file.filename
+        }
+        const data = await storageModel.create(fileData)
+        res.send({ data })
+    } catch (e) {
+        handleHttpError(res, 'ERROR_CREATE_ITEMS')
     }
-    const data = await storageModel.create(fileData)
-    res.send({ data })
-};
-const updateItem = (req, res) => {
 
-};
-const deleteItem = (req, res) => {
 
 };
 
+const deleteItem = async (req, res) => {
+    try {
+        const { id } = matchedData(req)
+        const dataFile = await storageModel.findById(id)
+        await storageModel.delete({_id:id}) //Change deleteOne(id) by .delete({_id:id}) for soft delete 
+        const { filename } = dataFile
+        const filePath = `${MEDIA_PATH}/${filename}`
+
+        //fs.unlinkSync(filePath)   //comment for soft delete
+        const data = {
+            filePath,
+            deleted: 1
+        }
+
+        res.send({ data });
+    } catch (e) {
+        console.log(e)
+        handleHttpError(res, 'ERROR_DELETE_ITEMS')
+    }
+};
 
 
 
-module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
+
+module.exports = { getItems, getItem, createItem, deleteItem };
