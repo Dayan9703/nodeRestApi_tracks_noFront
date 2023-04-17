@@ -5,25 +5,18 @@ const UserScheme = mongoose.Schema(
     {
         name: {
             type: String
-        }
-    },
-    {
+        },
         age: {
             type: Number
-        }
-    },
-    {
+        },
         email: {
             type: String,
             unique: true
-        }
-    },
-    {
+        },
         password: {
-            type: String
-        }
-    },
-    {
+            type: String,
+            select: false
+        },
         role: {
             type: ['user', 'admin'],
             default: 'user',
@@ -36,7 +29,7 @@ const UserScheme = mongoose.Schema(
 
 );
 
-UserScheme.plugin(mongooseDelete, {overrideMethods: 'all'})
+UserScheme.plugin(mongooseDelete, { overrideMethods: 'all' })
 module.exports = mongoose.model('users', UserScheme)
 
 /*Usuario de prueba
