@@ -6,7 +6,7 @@ const authMiddleware = async (req, res, next) => {
     try {
 
         if (!req.headers.authorization) {
-            handleHttpError(req, 'NEED_SESSION', 401)
+            handleHttpError(res, 'NEED_SESSION', 401)
             return
         }
 
@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
         const dataToken = await verifyToken(token)
 
         if (!dataToken._id) {
-            handleHttpError(req, 'ERROR_ID_TOKEN', 401)
+            handleHttpError(res, 'ERROR_ID_TOKEN', 401)
             return
         }
 
