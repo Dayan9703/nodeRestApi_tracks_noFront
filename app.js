@@ -3,12 +3,15 @@ const express = require('express')
 const cors = require('cors')
 const morganBady = require('morgan-body')
 const loggerStream  = require('./utils/handleLogger')
-const dbConnect = require('./config/mongo')
 const app = express()
+const dbConnectNoSql = require('./config/mongo')
+const {dbConnectMySql} = require('./config/mysql')
 
 app.use(cors())
 app.use(express.json())
 app.use(express.static('storage'))
+
+const ENGINE_DB = process.env.ENGINE_DB
 
 morganBady(app, {
     noColors: true,
@@ -27,4 +30,11 @@ app.listen(port, () => {
     console.log('Tu app esta lista por http://localhost:' + port)
 })
 
-dbConnect()
+if (ENGINE_DB === "mysql") {
+    dbConnectMySql();
+    return;
+  }
+  if (ENGINE_DB === "nosql") {
+    dbConnectNoSql();
+    return;
+  }
