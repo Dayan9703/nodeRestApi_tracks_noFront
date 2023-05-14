@@ -46,7 +46,6 @@ const deleteItem = async (req, res) => {
         const data = await tracksModel.delete({_id:id})
         res.send({ data });
     } catch (e) {
-        console.log(e)
         handleHttpError(res, 'ERROR_DELETE_ITEM')
     }
 };

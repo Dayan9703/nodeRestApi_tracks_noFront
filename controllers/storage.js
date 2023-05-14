@@ -55,7 +55,6 @@ const deleteItem = async (req, res) => {
 
         res.send({ data });
     } catch (e) {
-        console.log(e)
         handleHttpError(res, 'ERROR_DELETE_ITEMS')
     }
 };

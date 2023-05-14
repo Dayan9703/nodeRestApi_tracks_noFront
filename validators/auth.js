@@ -14,7 +14,7 @@ const validatorRegister = [
 
 const validatorLogin = [
     check('password').exists().notEmpty().isLength({ min: 3, max: 15 }),
-    check('email').exists().notEmpty().isEmail(),
+    check('email').exists().notEmpty(),
 
     (req, res, next) => {
         return validateResults(req, res, next)

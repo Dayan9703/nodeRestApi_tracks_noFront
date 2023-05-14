@@ -1,19 +1,19 @@
 const { matchedData } = require('express-validator')
 const { encrypt, compare } = require('../utils/handlePassword')
-const { tokenSing } = require('../utils/handleJwt')
+const { tokenSign } = require('../utils/handleJwt')
 const { handleHttpError } = require('../utils/handleError')
-const { usersModel } = require('../models')
+const { userModel } = require('../models')
 
 const registerCtrl = async (req, res) => {
     try {
         req = matchedData(req)
         const password = await encrypt(req.password)
         const body = { ...req, password }
-        const dataUser = await usersModel.create(body)
+        const dataUser = await userModel.create(body)
         dataUser.set('password', undefined, { strict: false })
-
+        
         const data = {
-            token: await tokenSing(dataUser),
+            token: await tokenSign(dataUser),
             user: dataUser
         }
 
@@ -26,7 +26,7 @@ const registerCtrl = async (req, res) => {
 const loginCtrl = async (req, res) => {
     try {
         req = matchedData(req)
-        const user = await usersModel.findOne({ email: req.email }).select('password name role email')
+        const user = await userModel.findOne({ email: req.email })
         if (!user) {
             handleHttpError(res, 'USER_NOT_EXIST', 404)
             return
@@ -41,7 +41,7 @@ const loginCtrl = async (req, res) => {
 
         user.set('password', undefined, {strict:false})
         const data = {
-            token: await tokenSing(user),
+            token: await tokenSign(user),
             user
         }
 
